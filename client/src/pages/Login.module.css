@@ -1,0 +1,150 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.content {
+  max-width: 28rem;
+  width: 100%;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.iconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--primary-600);
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  color: white;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--gray-600);
+}
+
+.card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-xl);
+  padding: 2rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 1rem;
+}
+
+.cardText {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+}
+
+.loginButton {
+  width: 100%;
+  background-color: var(--primary-600);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.2s;
+}
+
+.loginButton:hover {
+  background-color: var(--primary-700);
+  transform: scale(1.02);
+}
+
+.loginButton:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.features {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.featuresTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.75rem;
+}
+
+.featuresList {
+  list-style: none;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+}
+
+.featureIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--green-600);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-top: 1.5rem;
+}
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--primary-600);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

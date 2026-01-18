@@ -1,0 +1,230 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s;
+}
+
+.modalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  text-align: center;
+}
+
+.modal {
+  display: inline-block;
+  align-items: flex-start;
+  background: white;
+  border-radius: 0.5rem;
+  text-align: left;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  transform: scale(1);
+  transition: all 0.3s;
+  max-width: 32rem;
+  width: 100%;
+}
+
+.modalContent {
+  background: white;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.closeButton {
+  color: var(--gray-400);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.closeButton:hover {
+  color: var(--gray-500);
+}
+
+.closeIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.successContent {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.successIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--green-100);
+  margin: 0 auto 1rem;
+}
+
+.successIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--green-600);
+}
+
+.successTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.successText {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 1rem;
+}
+
+.successLink {
+  margin-top: 1rem;
+}
+
+.successLinkGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.successLinkInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  background-color: var(--gray-50);
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+}
+
+.successLinkButton {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--primary-600);
+  color: white;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.successLinkButton:hover {
+  background-color: var(--primary-700);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.error {
+  background-color: var(--red-50);
+  border: 1px solid var(--red-200);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.errorText {
+  font-size: 0.875rem;
+  color: var(--red-800);
+}
+
+.formGroup label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: 0.25rem;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: 2px solid var(--primary-500);
+  border-color: transparent;
+}
+
+.formGroup input::placeholder {
+  color: var(--gray-400);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.cancelButton,
+.submitButton {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  transition: all 0.2s;
+}
+
+.cancelButton {
+  background: white;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.cancelButton:hover {
+  background-color: var(--gray-50);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--primary-700);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

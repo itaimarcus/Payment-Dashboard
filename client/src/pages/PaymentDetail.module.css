@@ -1,0 +1,233 @@
+.container {
+  min-height: 100vh;
+  background-color: var(--gray-50);
+}
+
+.header {
+  background: white;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.headerContent {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  color: var(--gray-600);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.backButton:hover {
+  color: var(--gray-900);
+}
+
+.backIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--gray-900);
+}
+
+.main {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statusExecuted, .statusSettled {
+  background-color: var(--green-100);
+  color: var(--green-800);
+}
+
+.statusAuthorized {
+  background-color: var(--blue-100);
+  color: var(--blue-800);
+}
+
+.statusAuthorizationRequired, .statusAuthorizing {
+  background-color: var(--yellow-100);
+  color: var(--yellow-800);
+}
+
+.statusFailed {
+  background-color: var(--red-100);
+  color: var(--red-800);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.infoItem dt {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  margin-bottom: 0.25rem;
+}
+
+.infoItem dd {
+  font-size: 0.875rem;
+  color: var(--gray-900);
+}
+
+.amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--gray-900);
+}
+
+.paymentIdText {
+  font-family: 'Courier New', monospace;
+}
+
+.linkSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.linkInput {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  background-color: var(--gray-50);
+  font-size: 0.875rem;
+  font-family: 'Courier New', monospace;
+}
+
+.copyButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-600);
+  color: white;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.copyButton:hover {
+  background-color: var(--primary-700);
+}
+
+.copyIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+.linkHelp {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-top: 0.5rem;
+}
+
+.loading, .errorState {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-50);
+}
+
+.loadingSpinner {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--primary-600);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.errorContent {
+  text-align: center;
+}
+
+.errorIcon {
+  width: 4rem;
+  height: 4rem;
+  color: var(--red-500);
+  margin: 0 auto 1rem;
+}
+
+.errorTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+}
+
+.errorButton {
+  color: var(--primary-600);
+  background: none;
+  border: none;
+  font-weight: 500;
+}
+
+.errorButton:hover {
+  color: var(--primary-700);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

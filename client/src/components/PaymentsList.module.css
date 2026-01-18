@@ -1,0 +1,151 @@
+.emptyState {
+  padding: 3rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 4rem;
+  height: 4rem;
+  color: var(--gray-400);
+  margin: 0 auto 1rem;
+}
+
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.emptyText {
+  color: var(--gray-600);
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHead {
+  background-color: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.tableHead th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableHead th:last-child {
+  text-align: right;
+}
+
+.tableBody {
+  background: white;
+  divide-y: 1px solid var(--gray-200);
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: var(--gray-50);
+}
+
+.tableRow td {
+  padding: 1rem 1.5rem;
+  white-space: nowrap;
+}
+
+.referenceCell {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-900);
+}
+
+.paymentId {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-family: 'Courier New', monospace;
+  margin-top: 0.125rem;
+}
+
+.amountCell {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-transform: lowercase;
+}
+
+.statusBadge::first-letter {
+  text-transform: uppercase;
+}
+
+.statusExecuted, .statusSettled {
+  background-color: var(--green-100);
+  color: var(--green-800);
+}
+
+.statusAuthorized {
+  background-color: var(--blue-100);
+  color: var(--blue-800);
+}
+
+.statusAuthorizationRequired, .statusAuthorizing {
+  background-color: var(--yellow-100);
+  color: var(--yellow-800);
+}
+
+.statusFailed {
+  background-color: var(--red-100);
+  color: var(--red-800);
+}
+
+.dateCell {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.timeCell {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin-top: 0.125rem;
+}
+
+.actionsCell {
+  text-align: right;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.viewButton {
+  color: var(--primary-600);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.viewButton:hover {
+  color: var(--primary-900);
+}

@@ -1,0 +1,151 @@
+{
+  "info": {
+    "name": "Payment Dashboard API",
+    "description": "API endpoints for the Payment Dashboard with TrueLayer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Create Payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 100.50,\n  \"currency\": \"GBP\",\n  \"reference\": \"Invoice #12345\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments"]
+        }
+      }
+    },
+    {
+      "name": "Get All Payments",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments"]
+        }
+      }
+    },
+    {
+      "name": "Get Payments by Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/payments?status=authorized",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments"],
+          "query": [
+            {
+              "key": "status",
+              "value": "authorized",
+              "description": "Filter by status: authorization_required, authorizing, authorized, executed, failed, settled"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Payment by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/payments/:paymentId",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments", ":paymentId"],
+          "variable": [
+            {
+              "key": "paymentId",
+              "value": "payment-id-here"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Payments",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/payments/search?q=invoice",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments", "search"],
+          "query": [
+            {
+              "key": "q",
+              "value": "invoice",
+              "description": "Search term for reference or amount"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Payment Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/payments/stats?days=7",
+          "host": ["{{base_url}}"],
+          "path": ["api", "payments", "stats"],
+          "query": [
+            {
+              "key": "days",
+              "value": "7",
+              "description": "Number of days to include in stats (default: 7)"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
