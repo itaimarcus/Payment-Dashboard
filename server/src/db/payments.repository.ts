@@ -1,6 +1,6 @@
 import { Payment, PaymentStatus } from '../types/payment.js';
 import { docClient, PAYMENTS_TABLE } from './dynamodb.js';
-import { PutCommand, GetCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, GetCommand, QueryCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 /**
  * DynamoDB Repository for Payment operations
@@ -151,4 +151,20 @@ export async function searchPayments(
       payment.amount.toString().includes(searchTerm) ||
       payment.paymentId.toLowerCase().includes(searchLower)
   );
+}
+
+/**
+ * Delete a payment
+ * Only allows deletion of unpaid payments (authorization_required, authorizing, failed, cancelled)
+ */
+export async function deletePayment(userId: string, paymentId: string): Promise<void> {
+  const params = {
+    TableName: PAYMENTS_TABLE,
+    Key: {
+      userId,
+      paymentId,
+    },
+  };
+
+  await docClient.send(new DeleteCommand(params));
 }

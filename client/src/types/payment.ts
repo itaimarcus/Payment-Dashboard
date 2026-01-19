@@ -23,6 +23,8 @@ export interface Payment {
   updatedAt: string;
   paymentLink?: string;
   trueLayerData?: any;
+  statusMessage?: string;  // Message about status (e.g., "still processing")
+  canRetry?: boolean;      // Whether user can manually retry refresh
 }
 
 /**

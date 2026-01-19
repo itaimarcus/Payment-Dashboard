@@ -64,10 +64,10 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Payment Dashboard API running on http://localhost:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔐 Auth0 Domain: ${process.env.AUTH0_DOMAIN}`);
-  console.log(`💳 TrueLayer Mode: ${process.env.NODE_ENV === 'production' ? 'Production' : 'Sandbox'}`);
+  console.log(`=� Payment Dashboard API running on http://localhost:${PORT}`);
+  console.log(`=� Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`= Auth0 Domain: ${process.env.AUTH0_DOMAIN}`);
+  console.log(`=� TrueLayer Mode: ${process.env.NODE_ENV === 'production' ? 'Production' : 'Sandbox'}`);
   console.log('\nReady to accept requests!');
 });
 

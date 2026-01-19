@@ -3,9 +3,19 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthRequest, getUserId } from '../middleware/auth.js';
 import { trueLayerService } from '../services/truelayer.js';
 import * as paymentsRepo from '../db/payments.repository.js';
-import { Payment, CreatePaymentRequest, PaymentStatus } from '../types/payment.js';
+import { Payment, CreatePaymentRequest, PaymentStatus, TrueLayerPaymentResponse } from '../types/payment.js';
 
 const router = Router();
+
+/**
+ * Helper function to map TrueLayer payment response to our internal status
+ */
+function mapPaymentStatus(trueLayerPayment: TrueLayerPaymentResponse): PaymentStatus {
+  // Simply return TrueLayer's status as-is
+  // We don't try to distinguish cancellations from failures
+  // because TrueLayer treats them the same way
+  return trueLayerPayment.status;
+}
 
 /**
  * POST /api/payments
@@ -40,7 +50,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       paymentId: trueLayerPayment.id,
       amount: paymentRequest.amount,
       currency: paymentRequest.currency.toUpperCase(),
-      status: trueLayerPayment.status,
+      status: mapPaymentStatus(trueLayerPayment),
       reference: paymentRequest.reference,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -138,22 +148,38 @@ router.get('/stats', async (req: AuthRequest, res: Response) => {
 
     const payments = await paymentsRepo.getPaymentStats(userId, days);
 
-    // Group by date and calculate totals
-    const statsByDate = payments.reduce((acc: any, payment) => {
-      const date = payment.createdAt.split('T')[0]; // Extract date part
+    // Generate date range (last N days)
+    const dateRange: string[] = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      dateRange.push(date.toISOString().split('T')[0]);
+    }
+
+    // Group by date and currency
+    const statsByDateAndCurrency = payments.reduce((acc: any, payment) => {
+      const date = payment.createdAt.split('T')[0];
       if (!acc[date]) {
-        acc[date] = { date, total: 0, count: 0, currency: payment.currency };
+        acc[date] = { date, GBP: 0, EUR: 0, count: 0 };
       }
       if (payment.status === 'executed' || payment.status === 'authorized') {
-        acc[date].total += payment.amount;
+        if (payment.currency === 'GBP') {
+          acc[date].GBP += payment.amount;
+        } else if (payment.currency === 'EUR') {
+          acc[date].EUR += payment.amount;
+        }
         acc[date].count += 1;
       }
       return acc;
     }, {});
 
-    const stats = Object.values(statsByDate).sort((a: any, b: any) => 
-      a.date.localeCompare(b.date)
-    );
+    // Fill in missing dates with zeros
+    const stats = dateRange.map(date => {
+      if (statsByDateAndCurrency[date]) {
+        return statsByDateAndCurrency[date];
+      }
+      return { date, GBP: 0, EUR: 0, count: 0 };
+    });
 
     res.json(stats);
   } catch (error: any) {
@@ -188,6 +214,105 @@ router.get('/test-signature', async (req, res: Response) => {
 });
 
 /**
+ * POST /api/payments/:id/refresh-status
+ * Refresh payment status from TrueLayer with smart polling
+ * This endpoint polls TrueLayer internally until status changes or timeout
+ */
+router.post('/:id/refresh-status', async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = getUserId(req);
+    const paymentId = req.params.id;
+
+    console.log(`🔄 Refreshing status for payment ${paymentId}...`);
+
+    // Get payment from database
+    const payment = await paymentsRepo.getPayment(userId, paymentId);
+
+    if (!payment) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Payment not found',
+      });
+    }
+
+    const originalStatus = payment.status;
+    console.log(`   Original status: ${originalStatus}`);
+
+    // Smart polling: Try up to 4 times with 800ms delay between attempts
+    const maxAttempts = 4;
+    const delayMs = 800;
+    let attempt = 1;
+    let trueLayerPayment;
+
+    while (attempt <= maxAttempts) {
+      try {
+        console.log(`   Attempt ${attempt}/${maxAttempts}: Checking TrueLayer...`);
+        
+        trueLayerPayment = await trueLayerService.getPayment(paymentId);
+        const mappedStatus = mapPaymentStatus(trueLayerPayment);
+        console.log(`   TrueLayer status: ${trueLayerPayment.status}${trueLayerPayment.failure_reason ? ` (${trueLayerPayment.failure_reason})` : ''} → Mapped: ${mappedStatus}`);
+        
+        // If status changed from original, we're done!
+        if (mappedStatus !== originalStatus) {
+          console.log(`   ✅ Status changed from "${originalStatus}" to "${mappedStatus}"`);
+          break;
+        }
+        
+        // Status still the same - should we retry?
+        if (attempt < maxAttempts) {
+          console.log(`   Status still "${originalStatus}", waiting ${delayMs}ms before retry...`);
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+          attempt++;
+        } else {
+          console.log(`   ℹ️ Status unchanged after ${maxAttempts} attempts`);
+          break;
+        }
+      } catch (error: any) {
+        console.error(`   Attempt ${attempt} failed:`, error.message);
+        
+        // If this was our last attempt, throw the error
+        if (attempt === maxAttempts) {
+          throw error;
+        }
+        
+        // Otherwise, wait and retry
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        attempt++;
+      }
+    }
+
+    // Update database if status changed
+    const mappedStatus = trueLayerPayment ? mapPaymentStatus(trueLayerPayment) : payment.status;
+    if (trueLayerPayment && mappedStatus !== payment.status) {
+      console.log(`   💾 Updating database with new status...`);
+      await paymentsRepo.updatePaymentStatus(
+        userId,
+        paymentId,
+        mappedStatus,
+        trueLayerPayment
+      );
+      payment.status = mappedStatus;
+      payment.trueLayerData = trueLayerPayment;
+      payment.updatedAt = new Date().toISOString();
+    } else if (trueLayerPayment && mappedStatus === originalStatus) {
+      // Status didn't change after all attempts
+      console.log(`   ⚠️ Status still "${originalStatus}" after ${maxAttempts} attempts`);
+      // Add metadata to indicate status is still processing
+      payment.statusMessage = 'Payment status is still processing. It may take a few moments to update.';
+      payment.canRetry = true;
+    }
+
+    res.json(payment);
+  } catch (error: any) {
+    console.error('Refresh payment status error:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to refresh payment status from TrueLayer',
+    });
+  }
+});
+
+/**
  * GET /api/payments/:id
  * Get a single payment by ID
  */
@@ -209,16 +334,17 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
     // Optionally fetch latest status from TrueLayer
     try {
       const trueLayerPayment = await trueLayerService.getPayment(paymentId);
+      const mappedStatus = mapPaymentStatus(trueLayerPayment);
       
       // Update status if changed
-      if (trueLayerPayment.status !== payment.status) {
+      if (mappedStatus !== payment.status) {
         await paymentsRepo.updatePaymentStatus(
           userId,
           paymentId,
-          trueLayerPayment.status,
+          mappedStatus,
           trueLayerPayment
         );
-        payment.status = trueLayerPayment.status;
+        payment.status = mappedStatus;
         payment.trueLayerData = trueLayerPayment;
       }
     } catch (error) {
@@ -232,6 +358,47 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
     res.status(500).json({
       error: 'Server error',
       message: 'Failed to fetch payment',
+    });
+  }
+});
+
+/**
+ * DELETE /api/payments/:id
+ * Delete a payment (only unpaid ones)
+ */
+router.delete('/:id', async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = getUserId(req);
+    const paymentId = req.params.id;
+
+    // Get payment first to check status
+    const payment = await paymentsRepo.getPayment(userId, paymentId);
+
+    if (!payment) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Payment not found',
+      });
+    }
+
+    // Only allow deletion of unpaid payments
+    const deletableStatuses = ['authorization_required', 'authorizing', 'failed'];
+    if (!deletableStatuses.includes(payment.status)) {
+      return res.status(400).json({
+        error: 'Invalid operation',
+        message: 'Cannot delete paid or completed payments',
+      });
+    }
+
+    // Delete the payment
+    await paymentsRepo.deletePayment(userId, paymentId);
+
+    res.status(204).send(); // 204 No Content
+  } catch (error: any) {
+    console.error('Delete payment error:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to delete payment',
     });
   }
 });

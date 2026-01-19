@@ -37,57 +37,109 @@ function Login() {
 
   return (
     <div className="app-container">
-      <div className="main-card-wrapper">
+      <div className="main-card-wrapper" style={{ maxWidth: '450px', position: 'relative' }}>
+        {/* Logos in all 4 corners of the card */}
         <img 
-          src="https://cdn.auth0.com/quantum-assets/dist/latest/logos/auth0/auth0-lockup-en-ondark.png" 
-          alt="Auth0 Logo" 
-          className="auth0-logo"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
+          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
+          alt="Open Finance AI"
+          style={{
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+            width: '60px',
+            height: 'auto',
+            opacity: 0.6
           }}
         />
-        <h1 className="main-title">Payment Dashboard</h1>
+        <img 
+          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
+          alt="Open Finance AI"
+          style={{
+            position: 'absolute',
+            top: '15px',
+            right: '15px',
+            width: '60px',
+            height: 'auto',
+            opacity: 0.6
+          }}
+        />
+        <img 
+          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
+          alt="Open Finance AI"
+          style={{
+            position: 'absolute',
+            bottom: '15px',
+            left: '15px',
+            width: '60px',
+            height: 'auto',
+            opacity: 0.6
+          }}
+        />
+        <img 
+          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
+          alt="Open Finance AI"
+          style={{
+            position: 'absolute',
+            bottom: '15px',
+            right: '15px',
+            width: '60px',
+            height: 'auto',
+            opacity: 0.6
+          }}
+        />
         
-        <div className="action-card">
-          <p className="action-text">
-            Manage your payments with TrueLayer integration. Sign in to access your dashboard and manage transactions securely.
+        <h1 className="main-title" style={{ marginBottom: '0.75rem', fontSize: '2rem' }}>
+          Welcome!
+          <br />
+          Easy AND Secured
+          <br />
+          Payment Application
+        </h1>
+        
+        <div className="action-card" style={{ padding: '1.25rem' }}>
+          <p className="action-text" style={{ marginBottom: '0.875rem', fontSize: '0.875rem' }}>
+            Manage your payments with TrueLayer integration securely
           </p>
-          <LoginButton />
           
-          <div style={{ marginTop: '2rem', width: '100%' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#cbd5e0', marginBottom: '1rem', textAlign: 'center' }}>
-              Features:
-            </h3>
-            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e0' }}>
-                <svg style={{ width: '20px', height: '20px', color: '#68d391' }} fill="currentColor" viewBox="0 0 20 20">
+          <div style={{ marginBottom: '1rem', width: '100%' }}>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e0', fontSize: '0.8rem' }}>
+                <svg style={{ width: '14px', height: '14px', color: '#68d391', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                View and manage all payments
+                Create & manage TrueLayer payments
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e0' }}>
-                <svg style={{ width: '20px', height: '20px', color: '#68d391' }} fill="currentColor" viewBox="0 0 20 20">
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e0', fontSize: '0.8rem' }}>
+                <svg style={{ width: '14px', height: '14px', color: '#68d391', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Create payment links with TrueLayer
+                Advanced sort and filter mechanisms
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e0' }}>
-                <svg style={{ width: '20px', height: '20px', color: '#68d391' }} fill="currentColor" viewBox="0 0 20 20">
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e0', fontSize: '0.8rem' }}>
+                <svg style={{ width: '14px', height: '14px', color: '#68d391', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Filter by status and search payments
+                Real-time analytics & payment statistics
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e0' }}>
-                <svg style={{ width: '20px', height: '20px', color: '#68d391' }} fill="currentColor" viewBox="0 0 20 20">
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e0', fontSize: '0.8rem' }}>
+                <svg style={{ width: '14px', height: '14px', color: '#68d391', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                View payment analytics
+                Intuitive user interface
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e0', fontSize: '0.8rem' }}>
+                <svg style={{ width: '14px', height: '14px', color: '#68d391', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Exceptional user experience
               </li>
             </ul>
           </div>
+
+          <LoginButton />
         </div>
         
-        <p style={{ fontSize: '0.875rem', color: '#a0aec0', textAlign: 'center', marginTop: '1.5rem' }}>
+        <p style={{ fontSize: '0.75rem', color: '#a0aec0', textAlign: 'center', marginTop: '0.75rem' }}>
           Secured by Auth0 • Powered by TrueLayer
         </p>
       </div>

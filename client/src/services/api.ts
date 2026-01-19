@@ -85,6 +85,35 @@ class ApiClient {
   }
 
   /**
+   * Refresh payment status from TrueLayer
+   */
+  async refreshPaymentStatus(paymentId: string): Promise<Payment> {
+    try {
+      console.log(`🔄 API: Refreshing status for payment ${paymentId}...`);
+      const response = await this.client.post<Payment>(`/api/payments/${paymentId}/refresh-status`);
+      console.log(`✅ API: Status refreshed - ${response.data.status}`);
+      return response.data;
+    } catch (error) {
+      console.error('❌ API: Failed to refresh payment status');
+      throw this.handleError(error);
+    }
+  }
+
+  /**
+   * Delete a payment (only unpaid ones)
+   */
+  async deletePayment(paymentId: string): Promise<void> {
+    try {
+      console.log(`🗑️ API: Deleting payment ${paymentId}...`);
+      await this.client.delete(`/api/payments/${paymentId}`);
+      console.log(`✅ API: Payment deleted successfully`);
+    } catch (error) {
+      console.error('❌ API: Failed to delete payment');
+      throw this.handleError(error);
+    }
+  }
+
+  /**
    * Search payments by reference or amount
    */
   async searchPayments(searchTerm: string): Promise<Payment[]> {

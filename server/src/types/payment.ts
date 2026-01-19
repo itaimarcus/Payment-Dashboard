@@ -23,6 +23,8 @@ export interface Payment {
   updatedAt: string;
   paymentLink?: string;
   trueLayerData?: any;
+  statusMessage?: string;  // Message about status (e.g., "still processing")
+  canRetry?: boolean;      // Whether user can manually retry refresh
 }
 
 /**
@@ -49,4 +51,6 @@ export interface TrueLayerPaymentResponse {
   created_at: string;
   resource_token?: string;
   hosted_payments_page_url?: string;
+  failure_reason?: string;  // Reason for failed status (e.g., "canceled", "user_canceled_at_provider")
+  failure_stage?: string;   // Stage at which failure occurred
 }

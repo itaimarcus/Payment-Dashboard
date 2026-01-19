@@ -141,9 +141,39 @@ class TrueLayerService {
    */
   async createPayment(paymentData: CreatePaymentRequest): Promise<TrueLayerPaymentResponse> {
     try {
+      const currency = paymentData.currency.toUpperCase();
+      
+      // Configure account identifier based on currency
+      let accountIdentifier: any;
+      let countryCode = 'GB';
+      
+      switch (currency) {
+        case 'GBP':
+          // UK Sort Code + Account Number
+          accountIdentifier = {
+            type: 'sort_code_account_number',
+            sort_code: '123456',
+            account_number: '12345678',
+          };
+          countryCode = 'GB';
+          break;
+          
+        case 'EUR':
+          // European IBAN
+          accountIdentifier = {
+            type: 'iban',
+            iban: 'GB33BUKB20201555555555', // Test IBAN for sandbox
+          };
+          countryCode = 'GB'; // Can use GB IBAN for EUR in sandbox
+          break;
+          
+        default:
+          throw new Error(`Unsupported currency: ${currency}. TrueLayer only supports: GBP, EUR`);
+      }
+      
       const requestBody = {
         amount_in_minor: paymentData.amount * 100, // Convert to minor units (pence/cents)
-        currency: paymentData.currency.toUpperCase(),
+        currency: currency,
         payment_method: {
           type: 'bank_transfer',
           provider_selection: {
@@ -152,16 +182,14 @@ class TrueLayerService {
           beneficiary: {
             type: 'external_account',
             account_holder_name: 'Test Merchant',
-            account_identifier: {
-              type: 'sort_code_account_number',
-              sort_code: '123456',
-              account_number: '12345678',
-            },
+            account_identifier: accountIdentifier,
             reference: paymentData.reference,
           },
         },
         user: {
-          id: crypto.randomUUID(), // Generate unique user ID (UUID format required)
+          // Use consistent UUID so TrueLayer remembers bank selection for testing
+          // In production, use the actual Auth0 user ID from the authenticated user
+          id: 'df0909de-79aa-441c-8c54-14473dae1bdd', // Fixed UUID for sandbox testing
           name: 'Test User',
           email: 'test@example.com',
           date_of_birth: '1990-01-01', // Required for non-regulated accounts
@@ -170,7 +198,7 @@ class TrueLayerService {
             city: 'London',
             state: 'London',
             zip: 'EC1A 1BB',
-            country_code: 'GB',
+            country_code: countryCode,
           },
         },
       };
@@ -199,8 +227,10 @@ class TrueLayerService {
       
       // Build the hosted payment page URL
       // TrueLayer HPP format uses hash fragment, not query params
+      // Add from_payment param to return URI so dashboard knows to refresh
       if (payment.resource_token && payment.id) {
-        payment.hosted_payments_page_url = `https://payment.truelayer-sandbox.com/payments#payment_id=${payment.id}&resource_token=${payment.resource_token}&return_uri=${encodeURIComponent('http://localhost:5173/dashboard')}`;
+        const returnUri = `http://localhost:5173/dashboard?from_payment=true&payment_id=${payment.id}`;
+        payment.hosted_payments_page_url = `https://payment.truelayer-sandbox.com/payments#payment_id=${payment.id}&resource_token=${payment.resource_token}&return_uri=${encodeURIComponent(returnUri)}`;
       }
 
       return payment;

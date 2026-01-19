@@ -47,9 +47,9 @@ function PaymentStats() {
     );
   }
 
-  const totalAmount = stats.reduce((sum, stat) => sum + stat.total, 0);
-  const totalCount = stats.reduce((sum, stat) => sum + stat.count, 0);
-  const currency = stats[0]?.currency || 'GBP';
+  // Convert to ILS (Israeli Shekels) - Fixed rates as of January 2026
+  const GBP_TO_ILS = 4.23;  // £1 = ₪4.23
+  const EUR_TO_ILS = 3.67;  // €1 = ₪3.67
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -63,82 +63,101 @@ function PaymentStats() {
           <option value={7}>Last 7 days</option>
           <option value={14}>Last 14 days</option>
           <option value={30}>Last 30 days</option>
+          <option value={90}>Last 3 months</option>
         </select>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg p-4">
-          <p className="text-sm text-primary-700 font-medium mb-1">Total Payments</p>
-          <p className="text-2xl font-bold text-primary-900">{totalCount}</p>
-        </div>
-        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
-          <p className="text-sm text-green-700 font-medium mb-1">Total Amount</p>
-          <p className="text-2xl font-bold text-green-900">
-            {currency} {totalAmount.toFixed(2)}
-          </p>
-        </div>
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
-          <p className="text-sm text-blue-700 font-medium mb-1">Average Amount</p>
-          <p className="text-2xl font-bold text-blue-900">
-            {currency} {totalCount > 0 ? (totalAmount / totalCount).toFixed(2) : '0.00'}
-          </p>
-        </div>
-      </div>
-
-      {/* Chart */}
+      {/* Chart - Full Width */}
       {stats.length > 0 ? (
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stats}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return `${date.getMonth() + 1}/${date.getDate()}`;
-                }}
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `${currency} ${value}`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '0.5rem',
-                }}
-                formatter={(value: number) => [`${currency} ${value.toFixed(2)}`, 'Amount']}
-                labelFormatter={(label) => {
-                  const date = new Date(label);
-                  return date.toLocaleDateString();
-                }}
-              />
-              <Bar dataKey="total" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div style={{ width: '100%', height: '350px', minHeight: '350px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      const day = String(date.getDate()).padStart(2, '0');
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const year = date.getFullYear();
+                      return `${day}/${month}/${year}`;
+                    }}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 11 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '0.5rem',
+                    }}
+                    formatter={(value: number, name: string, props: any) => {
+                      const symbol = name === 'GBP' ? '£' : '€';
+                      return [`${symbol}${value.toFixed(2)}`, name];
+                    }}
+                    labelFormatter={(label) => {
+                      const date = new Date(label);
+                      const day = String(date.getDate()).padStart(2, '0');
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const year = date.getFullYear();
+                      return `${day}/${month}/${year}`;
+                    }}
+                    content={(props: any) => {
+                      if (!props.active || !props.payload || props.payload.length === 0) return null;
+                      
+                      const data = props.payload[0].payload;
+                      const gbpAmount = data.GBP || 0;
+                      const eurAmount = data.EUR || 0;
+                      const ilsAmount = (gbpAmount * GBP_TO_ILS) + (eurAmount * EUR_TO_ILS);
+                      
+                      const date = new Date(data.date);
+                      const day = String(date.getDate()).padStart(2, '0');
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const year = date.getFullYear();
+                      
+                      return (
+                        <div style={{
+                          backgroundColor: 'white',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '0.5rem',
+                          padding: '10px'
+                        }}>
+                          <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>{`${day}/${month}/${year}`}</p>
+                          <p style={{ color: '#3b82f6', margin: '4px 0' }}>GBP: £{gbpAmount.toFixed(2)}</p>
+                          <p style={{ color: '#eab308', margin: '4px 0' }}>EUR: €{eurAmount.toFixed(2)}</p>
+                          <p style={{ color: '#000', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #e5e7eb' }}>
+                            Total: ₪{ilsAmount.toFixed(2)}
+                          </p>
+                        </div>
+                      );
+                    }}
+                  />
+                  <Bar dataKey="GBP" fill="#3b82f6" radius={[8, 8, 0, 0]} name="GBP" />
+                  <Bar dataKey="EUR" fill="#eab308" radius={[8, 8, 0, 0]} name="EUR" />
+                </BarChart>
+              </ResponsiveContainer>
         </div>
       ) : (
-        <div className="h-64 flex items-center justify-center text-gray-500">
-          <div className="text-center">
-            <svg
-              className="w-16 h-16 mx-auto mb-2 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
-            <p>No payment data available for this period</p>
-          </div>
-        </div>
+        <div style={{ width: '100%', height: '350px' }} className="flex items-center justify-center text-gray-500">
+              <div className="text-center">
+                <svg
+                  className="w-16 h-16 mx-auto mb-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+                <p>No payment data available for this period</p>
+              </div>
+            </div>
       )}
     </div>
   );
