@@ -203,7 +203,7 @@ function Dashboard() {
       const newPayment = await apiClient.createPayment({
         amount: payment.amount,
         currency: payment.currency,
-        reference: payment.reference.replace(' (retry)', '') + ' (retry)',
+        reference: payment.reference.replace(' (retry)', ''),
       });
       
       // Navigate to the new payment link
@@ -376,21 +376,6 @@ function Dashboard() {
           )}
         </div>
       </main>
-
-      {/* Footer */}
-      <footer style={{ 
-        padding: '1.5rem', 
-        textAlign: 'center', 
-        fontSize: '0.75rem', 
-        color: '#6b7280',
-        borderTop: '1px solid #e5e7eb',
-        backgroundColor: '#f9fafb',
-        marginTop: 'auto'
-      }}>
-        <p style={{ maxWidth: '800px', margin: '0 auto', lineHeight: '1.5' }}>
-          Open Finance AI uses artificial intelligence to help financial institutions analyze, automate, and optimize data across open banking and broader financial ecosystems. It enables smarter decision-making through real-time insights, risk assessment, and personalized financial services while maintaining security and compliance.
-        </p>
-      </footer>
 
       {/* Create Payment Modal */}
       <CreatePaymentModal

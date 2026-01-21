@@ -93,10 +93,11 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     console.log('✅ Query successful, payments found:', payments.length);
 
     res.json(payments);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ List payments error:', error);
-    console.error('   Error name:', error.name);
-    console.error('   Error message:', error.message);
+    const err = error as Error;
+    console.error('   Error name:', err.name);
+    console.error('   Error message:', err.message);
     console.error('   Error stack:', error.stack);
     
     res.status(500).json({
@@ -127,7 +128,7 @@ router.get('/search', async (req: AuthRequest, res: Response) => {
     const payments = await paymentsRepo.searchPayments(userId, searchTerm);
 
     res.json(payments);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Search payments error:', error);
     res.status(500).json({
       error: 'Server error',
@@ -182,7 +183,7 @@ router.get('/stats', async (req: AuthRequest, res: Response) => {
     });
 
     res.json(stats);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get payment stats error:', error);
     res.status(500).json({
       error: 'Server error',
@@ -353,7 +354,7 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
     }
 
     res.json(payment);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get payment error:', error);
     res.status(500).json({
       error: 'Server error',

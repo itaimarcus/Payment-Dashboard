@@ -37,57 +37,7 @@ function Login() {
 
   return (
     <div className="app-container">
-      <div className="main-card-wrapper" style={{ maxWidth: '450px', position: 'relative' }}>
-        {/* Logos in all 4 corners of the card */}
-        <img 
-          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
-          alt="Open Finance AI"
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '15px',
-            width: '60px',
-            height: 'auto',
-            opacity: 0.6
-          }}
-        />
-        <img 
-          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
-          alt="Open Finance AI"
-          style={{
-            position: 'absolute',
-            top: '15px',
-            right: '15px',
-            width: '60px',
-            height: 'auto',
-            opacity: 0.6
-          }}
-        />
-        <img 
-          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
-          alt="Open Finance AI"
-          style={{
-            position: 'absolute',
-            bottom: '15px',
-            left: '15px',
-            width: '60px',
-            height: 'auto',
-            opacity: 0.6
-          }}
-        />
-        <img 
-          src="https://cdn.prod.website-files.com/62ca831ed36ebc226df1dcef/62ca83a3707bc540cd2c343f_transparent-logo-black-p-500.png"
-          alt="Open Finance AI"
-          style={{
-            position: 'absolute',
-            bottom: '15px',
-            right: '15px',
-            width: '60px',
-            height: 'auto',
-            opacity: 0.6
-          }}
-        />
-        
+      <div className="main-card-wrapper" style={{ maxWidth: '450px' }}>
         <h1 className="main-title" style={{ marginBottom: '0.75rem', fontSize: '2rem' }}>
           Welcome!
           <br />

@@ -84,7 +84,7 @@ class TrueLayerService {
     const signature = sign({
       kid: this.kid,
       privateKeyPem: privateKeyPem,
-      method: method.toUpperCase(),
+      method: method.toUpperCase() as any,
       path: path,
       headers: { 'Idempotency-Key': idempotencyKey },
       body: bodyString
@@ -128,7 +128,7 @@ class TrueLayerService {
       // Set expiration 1 minute before actual expiry for safety
       this.tokenExpiresAt = Date.now() + (response.data.expires_in - 60) * 1000;
       
-      return this.accessToken;
+      return this.accessToken!;
     } catch (error: any) {
       console.error('TrueLayer auth error:', error.response?.data || error.message);
       throw new Error('Failed to authenticate with TrueLayer');

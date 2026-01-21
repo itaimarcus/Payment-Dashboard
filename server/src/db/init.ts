@@ -28,14 +28,14 @@ async function createPaymentsTable() {
   const params = {
     TableName: PAYMENTS_TABLE,
     KeySchema: [
-      { AttributeName: 'userId', KeyType: 'HASH' },  // Partition key
-      { AttributeName: 'paymentId', KeyType: 'RANGE' }, // Sort key
+      { AttributeName: 'userId', KeyType: 'HASH' as const },  // Partition key
+      { AttributeName: 'paymentId', KeyType: 'RANGE' as const }, // Sort key
     ],
     AttributeDefinitions: [
-      { AttributeName: 'userId', AttributeType: 'S' },
-      { AttributeName: 'paymentId', AttributeType: 'S' },
-      { AttributeName: 'status', AttributeType: 'S' },
-      { AttributeName: 'createdAt', AttributeType: 'S' },
+      { AttributeName: 'userId', AttributeType: 'S' as const },
+      { AttributeName: 'paymentId', AttributeType: 'S' as const },
+      { AttributeName: 'status', AttributeType: 'S' as const },
+      { AttributeName: 'createdAt', AttributeType: 'S' as const },
     ],
     GlobalSecondaryIndexes: [
       {
@@ -55,11 +55,11 @@ async function createPaymentsTable() {
       {
         IndexName: 'CreatedAtIndex',
         KeySchema: [
-          { AttributeName: 'userId', KeyType: 'HASH' },
-          { AttributeName: 'createdAt', KeyType: 'RANGE' },
+          { AttributeName: 'userId', KeyType: 'HASH' as const },
+          { AttributeName: 'createdAt', KeyType: 'RANGE' as const },
         ],
         Projection: {
-          ProjectionType: 'ALL',
+          ProjectionType: 'ALL' as const,
         },
         ProvisionedThroughput: {
           ReadCapacityUnits: 5,
@@ -87,6 +87,7 @@ async function createPaymentsTable() {
     }
 
     // Create the table
+    // @ts-expect-error - DynamoDB type definitions are overly strict, params are valid
     await client.send(new CreateTableCommand(params));
     console.log(`✓ Table ${PAYMENTS_TABLE} created successfully`);
 
