@@ -167,15 +167,42 @@ cd Payment-Dashboard
 
 ### 4. Environment Configuration
 
+<<<<<<< HEAD
 #### Client Configuration
+=======
+# 2. Start DynamoDB Local (only DynamoDB, not all services)
+docker-compose up -d dynamodb dynamodb
+>>>>>>> a66f519 (Payment DashBoard Application - Final Version)
 
 Create `client/.env` (copy from `client/env.example`):
 
+<<<<<<< HEAD
 ```env
 VITE_AUTH0_DOMAIN=your-auth0-domain.auth0.com
 VITE_AUTH0_CLIENT_ID=your-auth0-client-id
 VITE_AUTH0_REDIRECT_URI=http://localhost:5173/callback
 VITE_API_URL=http://localhost:3001
+=======
+# 4. Initialize database (REQUIRED - first time only)
+cd server
+npm run init-db
+
+# 5. Start backend (in one terminal)
+cd server
+npm run dev
+
+# 6. Start frontend (in another terminal)
+# Windows: use --host 0.0.0.0
+cd client
+npm run dev -- --host 0.0.0.0
+
+# Mac/Linux:
+cd client
+npm run dev
+
+# 7. Open browser
+# Go to the URL shown in terminal (usually http://localhost:5173)
+>>>>>>> a66f519 (Payment DashBoard Application - Final Version)
 ```
 
 #### Server Configuration
@@ -413,6 +440,7 @@ All endpoints require authentication via Auth0 JWT token.
 
 ## Troubleshooting
 
+<<<<<<< HEAD
 ### Docker Compose Commands
 
 ```bash
@@ -421,6 +449,88 @@ docker-compose up
 
 # Start in detached mode (background)
 docker-compose up -d
+=======
+**User Experience:**
+- [ ] Email/SMS notifications for payment events
+- [ ] Export payments to CSV/PDF/Excel
+- [ ] Dark mode theme
+- [ ] Mobile app (React Native)
+- [ ] Multi-language support (i18n)
+
+**Technical Improvements:**
+- [ ] Unit tests (Jest/Vitest)
+- [ ] E2E tests (Playwright/Cypress)
+- [ ] CI/CD pipeline (GitHub Actions)
+- [ ] Production deployment guide (AWS/Vercel)
+- [ ] Rate limiting and API throttling
+- [ ] Logging and monitoring (Sentry, DataDog)
+- [ ] Database migrations
+- [ ] Admin dashboard for user management
+
+## 🔧 Troubleshooting
+
+### "Failed to fetch payments" Error
+
+**Problem:** Backend can't connect to DynamoDB
+
+**Solution:**
+1. Ensure Docker Desktop is running
+2. Start DynamoDB: `docker-compose up -d dynamodb dynamodb`
+3. Verify it's running: `docker ps`
+4. Initialize database: `cd server && npm run init-db`
+5. Restart backend: `cd server && npm run dev`
+
+---
+
+### "localhost refused to connect"
+
+**Problem:** Servers are not running
+
+**Solution:**
+1. Check backend is running on http://localhost:3001
+2. Check frontend is running on http://localhost:3000
+3. Start both:
+   ```bash
+   # Terminal 1
+   cd server && npm run dev
+   
+   # Terminal 2
+   cd client && npm run dev
+   ```
+
+---
+
+### Auth0 Login Errors
+
+**Problem:** Can't log in or token errors
+
+**Solution:**
+1. Verify `client/.env` has correct Auth0 domain and client ID
+2. Check Auth0 callback URLs include `http://localhost:3000`
+3. Ensure Auth0 app type is **Single Page Application**
+4. Check "Refresh Token" is enabled in Auth0 Grant Types
+5. Clear browser cache and localStorage, then log in again
+
+---
+
+### TrueLayer "Invalid Parameters"
+
+**Problem:** Can't create payment
+
+**Solution:**
+1. Verify `server/.env` has correct TrueLayer credentials
+2. Ensure `ec512-private-key.pem` exists in `server/` folder
+3. Check signing key ID matches TrueLayer console
+4. **Only use GBP or EUR** (other currencies not supported in sandbox)
+
+---
+
+### Docker Commands
+
+```bash
+# Start DynamoDB
+docker-compose up -d dynamodb
+>>>>>>> a66f519 (Payment DashBoard Application - Final Version)
 
 # Stop all services
 docker-compose down
@@ -431,6 +541,7 @@ docker-compose down -v
 # View logs
 docker-compose logs
 
+<<<<<<< HEAD
 # View logs for specific service
 docker-compose logs frontend
 docker-compose logs backend
@@ -441,6 +552,11 @@ docker-compose up --build
 
 # Restart a specific service
 docker-compose restart backend
+=======
+# Fresh restart (removes data)
+docker-compose down -v
+docker-compose up -d dynamodb
+>>>>>>> a66f519 (Payment DashBoard Application - Final Version)
 ```
 
 ### DynamoDB Connection Issues
