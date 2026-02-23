@@ -46,3 +46,7 @@ coverage/
 # Private keys and certificates
 *.pem
 *.key
+
+# Extra docs in project root (only README.md is the main doc)
+/*.md
+!README.md
