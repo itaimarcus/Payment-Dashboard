@@ -191,7 +191,7 @@ The client will start at `http://localhost:5173`
 - Fill in:
   - **Reference**: Payment description (e.g., "Invoice #12345")
   - **Amount**: Payment amount (e.g., 100.00)
-  - **Currency**: GBP, EUR, or USD
+  - **Currency**: GBP or EUR
 - Click "Create Payment"
 - Copy the payment link to share with customers
 
